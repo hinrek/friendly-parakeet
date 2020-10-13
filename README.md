@@ -3,7 +3,7 @@
 This is based on the Kubernetes examples:
 https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
 
-## Prequisits
+## Prerequisites
 
 >NB! Default configuration is using NodePort as the development was done with Minukube.
 
