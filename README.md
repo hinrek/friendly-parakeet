@@ -1,14 +1,11 @@
 # friendly-parakeet
 
-This is based on the Kubernetes examples: 
-
+This is based on the Kubernetes examples:
 https://kubernetes.io/docs/tutorials/stateless-application/guestbook/
-
-https://kubernetes.io/docs/tutorials/stateless-application/guestbook-logs-metrics-with-elk/
-
 
 ## Prequisits
 
+>NB! Default configuration is using NodePort as the development was done with Minukube.
 
 * Install and Set Up [kubectl]( 
 https://kubernetes.io/docs/tasks/tools/install-kubectl/)
@@ -18,43 +15,22 @@ https://kubernetes.io/docs/tasks/tools/install-kubectl/)
 
 ## Deploy the project locally
 
-
->NB! Default configuration is using NodePort as the development was done with Minukube.
-
-Redis master deployment 
+Redis  
 
 ```
-kubectl apply -f application/guestbook/redis-master-deployment.yaml
+kubectl apply -f redis.yaml
 ```
 
-Redis master service 
+Frontend 
 
 ```
-kubectl apply -f application/guestbook/redis-master-service.yaml
+kubectl apply -f frontend.yaml
 ```
 
-Redis slave deployment 
+Create a Service Account & ClusterRoleBinding
 
 ```
-kubectl apply -f application/guestbook/redis-slave-deployment.yaml
-```
-
-Redis slave service 
-
-```
-kubectl apply -f application/guestbook/redis-slave-service.yaml
-```
-
-Frontend deployment 
-
-```
-kubectl apply -f application/guestbook/frontend-deployment.yaml
-```
-
-Frontend service 
-
-```
-kubectl apply -f application/guestbook/frontend-service.yaml
+kubectl apply -f dashboard-adminuser.yaml
 ```
 
 Install Kubernetes Dashboard
@@ -63,15 +39,10 @@ Install Kubernetes Dashboard
 kubectl apply -f https://raw.githubusercontent.com/kubernetes/dashboard/v2.0.0/aio/deploy/recommended.yaml
 ```
 
-Create a Service Account
-```
-kubectl apply -f application/guestbook/dashboard-adminuser.yaml
-```
-
-Create a ClusterRoleBinding
+Start the Dashboard (open in a new terminal window or send the job to background)
 
 ```
-kubectl apply -f application/guestbook/adminuser-cluster-role-binding.yml
+kubectl proxy
 ```
 
 Get the Bearer Token for Dashboard login
@@ -80,16 +51,11 @@ Get the Bearer Token for Dashboard login
 kubectl -n kubernetes-dashboard describe secret $(kubectl -n kubernetes-dashboard get secret | grep admin-user | awk '{print $1}')
 ```
 
-Start the Dashboard
+Paste the token from the previous command into the dashboard login field
 
-```
-kubectl proxy
-```
-
-Dashboarb
 [http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/](http://localhost:8001/api/v1/namespaces/kubernetes-dashboard/services/https:kubernetes-dashboard:/proxy/)
 
-## Get frontend IP
+## Get the application frontend IP & profit
 
 
 NodePort 
